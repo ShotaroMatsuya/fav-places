@@ -13,6 +13,7 @@ body {
   background: #4d4d4d;
 }
 
+/* -enterや-exitなどのクラスnameは3rdPartyライブラリのreact-transition-groupで自動的に追加される */
 .slide-in-left-enter {
   transform: translateX(-100%);
 }
