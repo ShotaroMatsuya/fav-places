@@ -28,8 +28,8 @@ const Input = props => {
   //   関連する複数のstateを一元管理するにはuseStateよりもuseReducerのほうがmake sense
   //第2引数はoptionalで初期stateをセットすることができる
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: '',
-    isValid: false,
+    value: props.initialValue || '', //props.valueがなければempty strings
+    isValid: props.initialValid || false, //props.validがなければfalse
     isTouched: false,
   });
 
@@ -38,7 +38,7 @@ const Input = props => {
   const { value, isValid } = inputState;
   useEffect(() => {
     //state(valueとisValid)が変化するたびに他のコンポーネントでその値を使用したい
-    //親コンポーネントのreducerで全てのinputを一括管理するため
+    //それぞれの子コンポーネント(Input)の入力と親コンポーネント(NewPlace)のreducerで一括管理するため
     onInput(id, value, isValid);
   }, [id, value, isValid, onInput]);
   const changeHandler = event => {

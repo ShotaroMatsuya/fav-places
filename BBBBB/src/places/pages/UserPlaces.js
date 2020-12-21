@@ -19,7 +19,7 @@ const DUMMY_PLACES = [
   },
   {
     id: 'p2',
-    title: 'Tokyo Tower',
+    title: 'Tokyo Tow',
     description: 'One of the most famous tourist spot in Japan!',
     imageUrl:
       'https://d2hpum9hu56in0.cloudfront.net/userimage/photo/image/17267/large_original_aspect_for_pc_375f6b7f-d6d1-4615-a302-1f22fc95e884.jpeg',

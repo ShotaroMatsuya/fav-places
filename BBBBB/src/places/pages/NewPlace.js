@@ -6,38 +6,14 @@ import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from '../../shared/util/validators';
-import './NewPlace.css';
+import { useForm } from '../../shared/hooks/form-hook';
 
-const formReducer = (state, action) => {
-  switch (action.type) {
-    case 'INPUT_CHANGE':
-      let formIsValid = true;
-      //inputIdには'title'や'description'が来る
-      for (const inputId in state.inputs) {
-        if (inputId === action.inputId) {
-          //dispatchされたInputに対して
-          formIsValid = formIsValid && action.isValid;
-        } else {
-          //値の変更がないInputに対して
-          formIsValid = formIsValid && state.inputs[inputId].isValid;
-        }
-      }
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.inputId]: { value: action.value, isValid: action.isValid },
-        },
-        isValid: formIsValid,
-      };
-    default:
-      return state;
-  }
-};
+import './PlaceForm.css';
 
 const NewPlace = () => {
-  const [formState, dispatch] = useReducer(formReducer, {
-    inputs: {
+  //userの入力値をcustom hookで管理する
+  const [formState, inputHandler] = useForm(
+    {
       //stored individual input-value & validity
       title: {
         value: '',
@@ -47,19 +23,14 @@ const NewPlace = () => {
         value: '',
         isValid: false,
       },
+      address: {
+        value: '',
+        isValid: false,
+      },
     },
-    isValid: false, //stored information of overall form validity
-  });
-  //子コンポーネントにpropsで渡すのでinfiniteLoopを防ぐためにuseCallbackでmemoする
-  //入力されるたびにInputコンポーネントから送られるvalueとvalidityがformReducerにdispatchされる仕組み
-  const inputHandler = useCallback((id, value, isValid) => {
-    dispatch({
-      type: 'INPUT_CHANGE',
-      value: value,
-      isValid: isValid,
-      inputId: id,
-    });
-  }, []);
+    false
+  );
+
   const placeSubmitHandler = event => {
     event.preventDefault();
     console.log(formState.inputs); //send this to the backend!
