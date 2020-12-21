@@ -6,6 +6,10 @@ const formReducer = (state, action) => {
       let formIsValid = true;
       //inputIdには'title'や'description'が来る
       for (const inputId in state.inputs) {
+        if (!state.inputs[inputId]) {
+          //nameがundefinedのときにループが止まらないようにするために追加
+          continue;
+        }
         if (inputId === action.inputId) {
           //dispatchされたInputに対して
           formIsValid = formIsValid && action.isValid;
@@ -50,6 +54,7 @@ export const useForm = (initialInputs, initialFormValidity) => {
     });
   }, []);
 
+  //initialize form value & validity
   const setFormData = useCallback((inputData, formValidity) => {
     dispatch({
       type: 'SET_DATA',
