@@ -1,9 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
+
+const { DATABASE_PASSWORD } = require('./secret');
+const url = `mongodb+srv://shotaro:${DATABASE_PASSWORD}@cluster0.omrq7.mongodb.net/places?retryWrites=true&w=majority`;
 
 const app = express();
 
@@ -29,6 +33,13 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || 'An unknown error occurred!' });
 });
 
-app.listen(5000, () => {
-  console.log('App listening on port 5000!');
-});
+mongoose
+  .connect(url)
+  .then(() => {
+    app.listen(5000, () => {
+      console.log('App listening on port 5000!');
+    });
+  })
+  .catch(err => {
+    console.log(err);
+  });

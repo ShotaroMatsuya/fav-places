@@ -1,7 +1,7 @@
 const axios = require('axios');
 const HttpError = require('../models/http-error');
 
-const API_KEY = require('../secret');
+const { API_KEY } = require('../secret');
 
 async function getCoordsForAddress(address) {
   //api-keyを使わない場合のダミー
