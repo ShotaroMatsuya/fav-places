@@ -11,7 +11,8 @@ const placeSchema = new Schema({
     lat: { type: Number, required: true },
     lng: { type: Number, required: true },
   },
-  creator: { type: String, required: true },
+  // ref property allows us to establish a connection between our current User Schema
+  creator: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
 });
 
 // model method is provided by mongoose .
