@@ -7,13 +7,25 @@ const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
 const { DATABASE_PASSWORD } = require('./secret');
-const url = `mongodb+srv://shotaro:${DATABASE_PASSWORD}@cluster0.omrq7.mongodb.net/places?retryWrites=true&w=majority`;
+const url = `mongodb+srv://shotaro:${DATABASE_PASSWORD}@cluster0.omrq7.mongodb.net/mern?retryWrites=true&w=majority`;
 
 const app = express();
 
 //post-requestを受け取るときに必要
 //jsonメソッドを使うと、reqに含まれるjsonファイルをjavascriptのobjectやarrayに変形してくれる
 app.use(bodyParser.json());
+
+// to prevent cors error(cross origin resource sharing) ,attached certain headers to the response
+// CORSはgeneral security concept ではなくブラウザによるrestrictであるためpost manでは普通にアクセスできる
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); //whichever domains should access
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin,X-Requested-With,Content-Type,Accept,Authorization'
+  );
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+  next();
+});
 
 app.use('/api/places', placesRoutes); //routeオブジェクトはexpressにより自動的にmiddlewareとして扱われる(nextいらない)
 app.use('/api/users', usersRoutes);
