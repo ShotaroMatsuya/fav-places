@@ -1,19 +1,39 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import UsersList from '../components/UsersList';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
 const Users = () => {
-  const USERS = [
-    {
-      id: 'u1',
-      name: 'Shotaro Matsuya',
-      image:
-        'https://football-tribe.com/japan/wp-content/uploads/sites/23/2020/01/GettyImages-535012174-800x450.jpg',
-      places: 3,
-    },
-  ];
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  const [loadedUsers, setLoadedUsers] = useState();
 
-  return <UsersList items={USERS} />;
+  //useEffect doesn't want a function which returns a promise and any async function
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const responseData = await sendRequest(
+          'http://localhost:5000/api/users'
+        );
+
+        setLoadedUsers(responseData.users);
+      } catch (err) {}
+    };
+    fetchUsers();
+  }, [sendRequest]); //Because sendRequest function is coming from outside.(that's why it's important to have sendRequest be wrapped by useCallback in custom hook.)
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedUsers && <UsersList items={loadedUsers} />};
+    </React.Fragment>
+  );
 };
 
 export default Users;
