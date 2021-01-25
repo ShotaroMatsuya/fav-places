@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -14,6 +17,8 @@ const app = express();
 //post-requestを受け取るときに必要
 //jsonメソッドを使うと、reqに含まれるjsonファイルをjavascriptのobjectやarrayに変形してくれる
 app.use(bodyParser.json());
+
+app.use('/uploads/images', express.static(path.join('uploads', 'images')));
 
 // to prevent cors error(cross origin resource sharing) ,attached certain headers to the response
 // CORSはgeneral security concept ではなくブラウザによるrestrictであるためpost manでは普通にアクセスできる
@@ -37,6 +42,12 @@ app.use((req, res, next) => {
 
 //error handling middleware...4つのparameterをセットするとexpressにより自動的にerror middlewareと認識される
 app.use((error, req, res, next) => {
+  if (req.file) {
+    //fileがstorageされたあとにerrが発生したらfileを削除する
+    fs.unlink(req.file.path, err => {
+      console.log(err);
+    });
+  }
   if (res.headerSent) {
     //headerがすでに送られていた場合にtrueになる(total 1回だけしかheaderは送ることができない)
     return next(error);

@@ -1,4 +1,5 @@
-const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 
@@ -102,7 +103,7 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image: 'https://media.timeout.com/images/105544832/1372/772/image.jpg',
+    image: req.file.path,
     creator,
   });
   //before save(), we should check whether provided userId exists already.
@@ -218,6 +219,8 @@ const deletePlace = async (req, res, next) => {
     return next(error);
   }
 
+  const imagePath = place.image;
+
   try {
     // await place.remove();
     // transactionを用いて1.placeを削除 2.関連するuser内のplaceを削除　する
@@ -236,6 +239,9 @@ const deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
+  fs.unlink(imagePath, err => {
+    console.log(err);
+  });
   res.status(200).json({ message: 'Deleted place.' });
 };
 
