@@ -7,6 +7,7 @@ const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
 const Place = require('../models/place');
 const User = require('../models/user');
+const fileHelper = require('../middleware/file-delete');
 
 // let DUMMY_PLACES = [
 //   {
@@ -103,7 +104,8 @@ const createPlace = async (req, res, next) => {
     description,
     address,
     location: coordinates,
-    image: req.file.path,
+    // image: req.file.path,
+    image: req.file.key,
     creator,
   });
   //before save(), we should check whether provided userId exists already.
@@ -239,9 +241,11 @@ const deletePlace = async (req, res, next) => {
     );
     return next(error);
   }
-  fs.unlink(imagePath, err => {
-    console.log(err);
-  });
+  // fs.unlink(imagePath, err => {
+  //   console.log(err);
+  // });
+  fileHelper.deleteFile(imagePath);
+
   res.status(200).json({ message: 'Deleted place.' });
 };
 

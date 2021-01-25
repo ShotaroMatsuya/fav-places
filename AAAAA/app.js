@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
+const fileHelper = require('./middleware/file-delete');
 
 const { DATABASE_PASSWORD } = require('./secret');
 const url = `mongodb+srv://shotaro:${DATABASE_PASSWORD}@cluster0.omrq7.mongodb.net/mern?retryWrites=true&w=majority`;
@@ -44,9 +45,10 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
   if (req.file) {
     //fileがstorageされたあとにerrが発生したらfileを削除する
-    fs.unlink(req.file.path, err => {
-      console.log(err);
-    });
+    // fs.unlink(req.file.path, err => {
+    //   console.log(err);
+    // });
+    fileHelper.deleteFile(req.file.key);
   }
   if (res.headerSent) {
     //headerがすでに送られていた場合にtrueになる(total 1回だけしかheaderは送ることができない)
