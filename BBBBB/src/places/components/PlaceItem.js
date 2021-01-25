@@ -76,7 +76,7 @@ const PlaceItem = props => {
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img
-              src={`http://localhost:5000/${props.image}`}
+              src={process.env.REACT_APP_AWS_ROOT_PATH + props.image}
               alt={props.title}
             />
           </div>
