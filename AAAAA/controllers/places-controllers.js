@@ -90,7 +90,7 @@ const createPlace = async (req, res, next) => {
       new HttpError('Invalid inputs passed,please check your data.', 422)
     );
   }
-  const { title, description, address, creator } = req.body;
+  const { title, description, address } = req.body;
 
   let coordinates;
   try {
@@ -106,12 +106,12 @@ const createPlace = async (req, res, next) => {
     location: coordinates,
     // image: req.file.path,
     image: req.file.key,
-    creator,
+    creator: req.userData.userId,
   });
   //before save(), we should check whether provided userId exists already.
   let user;
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (err) {
     const error = new HttpError('Creating place failed, please try again', 500);
     return next(error);
