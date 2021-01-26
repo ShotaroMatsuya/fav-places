@@ -178,6 +178,12 @@ const updatePlace = async (req, res, next) => {
     return next(error);
   }
 
+  // place.creatorはmongoose により定義された特殊なtypeなのでstringに変換する必要がある
+  if (place.creator.toString() !== req.userData.userId) {
+    const error = new HttpError('You are not allowed to edit this place.', 401);
+    return next(error);
+  }
+
   place.title = title;
   place.description = description;
 
@@ -218,6 +224,14 @@ const deletePlace = async (req, res, next) => {
 
   if (!place) {
     const error = new HttpError('Could not find place for this id.', 404);
+    return next(error);
+  }
+  //populate('creator)メソッドを使ったのでtoStringメソッド不要
+  if (place.creator.id !== req.userData.userId) {
+    const error = new HttpError(
+      'You are not allowed to delete this place.',
+      401 //you might be authenticated, but you're still not allowed to do this operation to perform this operation
+    );
     return next(error);
   }
 
