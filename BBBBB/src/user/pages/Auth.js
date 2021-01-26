@@ -81,7 +81,7 @@ const Auth = () => {
           }
         );
         //provided by context-object
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     } else {
       try {
@@ -97,7 +97,7 @@ const Auth = () => {
           formData
         );
         //provided by context-object
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
