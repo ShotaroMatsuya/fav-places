@@ -10,8 +10,7 @@ const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 const fileHelper = require('./middleware/file-delete');
 
-const { DATABASE_PASSWORD } = require('./secret');
-const url = `mongodb+srv://shotaro:${DATABASE_PASSWORD}@cluster0.omrq7.mongodb.net/mern?retryWrites=true&w=majority`;
+const url = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.omrq7.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 const app = express();
 
