@@ -1,4 +1,6 @@
 const multer = require('multer');
+require('dotenv').config();
+
 const AWS = require('aws-sdk');
 const multerS3 = require('multer-s3');
 const { v4: uuidv4 } = require('uuid');
