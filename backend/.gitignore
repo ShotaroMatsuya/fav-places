@@ -2,3 +2,4 @@
 secret.js
 nodemon.json
 .env
+uploads/images/*

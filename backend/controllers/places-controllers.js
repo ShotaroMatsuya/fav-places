@@ -120,7 +120,6 @@ const createPlace = async (req, res, next) => {
     const error = new HttpError('Could not find user for provided id', 404);
     return next(error);
   }
-
   console.log(user);
   //if this user is existing well then we can do two things -> implement transaction & session
   // 1.新しいplaceをplacesドキュメントに追加
