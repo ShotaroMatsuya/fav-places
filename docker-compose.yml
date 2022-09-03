@@ -9,7 +9,7 @@ services:
     ports:
       - '5000:5000'
     volumes:
-      - /app/node_modules
+      - ./backend/node_modules:/app/node_modules
       - ./backend:/app
 
   front:
@@ -21,15 +21,15 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - /app/node_modules
+      - ./front/node_modules:/app/node_modules
       - ./front:/app
 
   npm:
     build:
-      context: ./backend
-      dockerfile: Dockerfile.back
+      context: ./front
+      dockerfile: Dockerfile.front
     working_dir: /app
     entrypoint: ['npm']
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./front:/app
+      - ./front/node_modules:/app/node_modules
