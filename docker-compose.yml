@@ -26,10 +26,10 @@ services:
 
   npm:
     build:
-      context: ./front
-      dockerfile: Dockerfile.front
+      context: ./backend
+      dockerfile: Dockerfile.back
     working_dir: /app
     entrypoint: ['npm']
     volumes:
-      - ./front:/app
-      - ./front/node_modules:/app/node_modules
+      - ./backend/node_modules:/app/node_modules
+      - ./backend:/app
