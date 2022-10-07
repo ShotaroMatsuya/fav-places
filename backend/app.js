@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+const serverlessExpress = require('@vendia/serverless-express');
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -65,10 +66,15 @@ app.use((error, req, res, next) => {
 mongoose
   .connect(url)
   .then(() => {
-    app.listen(process.env.PORT || 5000, () => {
-      console.log('App listening on port 5000!');
-    });
+    if (process.env.NODE_ENV === `development`) {
+      app.listen(process.env.PORT || 5000, () => {
+        console.log('App listening on port 5000!');
+      });
+    }
+    console.log('connected to MongoDB!');
   })
   .catch(err => {
     console.log(err);
   });
+
+exports.handler = serverlessExpress({ app });
